@@ -2,11 +2,14 @@
 
 let btnLogin = document.getElementById('btnLogin');
 let radioAccount = document.getElementById('radioAccount');
+let accounts = {};
+let keys = [];
+let indentify, password, submit, logout = null;
 
 chrome.storage.sync.get('accounts', function (data) {
-  const { accounts } = data;
+  ({ accounts } = data);
 
-  const keys = Object.keys(accounts);
+  keys = Object.keys(accounts);
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];
@@ -16,9 +19,10 @@ chrome.storage.sync.get('accounts', function (data) {
     input.setAttribute('type', 'radio');
     input.setAttribute('name', 'account');
     input.value = i;
+    if (i === 0) input.checked = true;
 
     var label = document.createElement('label');
-    label.innerHTML = '<span>' + key + '</span> <br/> <small>' + acc.username + '</small>';
+    label.innerHTML = '<span style="font-weight: bold;">' + key + '</span> <br/> <small style="font-style: italic;">' + acc.username + '</small>';
 
     var div = document.createElement('div');
     div.setAttribute('style', 'display: flex;');
@@ -26,14 +30,54 @@ chrome.storage.sync.get('accounts', function (data) {
     div.appendChild(input);
     div.appendChild(label);
 
+    div.addEventListener("click", (el) => {
+      el.target.parentElement.previousSibling.checked = true;
+    });
+
     radioAccount.appendChild(div);
   }
 })
 
+const onClick = (acc) => `
+  logout = document.getElementsByClassName('ic-logout-c');
+  if (logout.length === 0) {
+    
+    indentify = document.getElementById('signin-identity');
+    password = document.getElementById('password');
+
+    indentify.value = '${acc.username}';
+    password.value = '${acc.password}';
+
+    indentify.dispatchEvent(new Event('change'));
+    password.dispatchEvent(new Event('change'));
+
+    submit = document.querySelector('#signin button[type="submit"]');
+  
+    setTimeout(() => {
+      submit.click();
+    }, 0)
+  } else {
+    logout = logout[0].parentElement.parentElement.click();
+
+    setTimeout(() => {
+      console.log('111111111');
+    }, 5000);
+  }
+`;
+
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  chrome.tabs.executeScript(
+    tabs[0].id,
+    { code: `console.log('123123')` });
+});
+
+
 btnLogin.onclick = function () {
+  let acc = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
+
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.executeScript(
       tabs[0].id,
-      { file: '/login.js' });
+      { code: onClick(acc) });
   });
 };

@@ -1,7 +1,12 @@
 # tool
 Tào lao tool
 
-#### 1. Chay ngam js
+### Version 1.1.1
+- Load danh sach account tu file json
+- Chon tai khoan login
+- Logout
+
+####  Chay ngam js
 ``` javscript
 "content_scripts": [
   {
