@@ -74,7 +74,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 
 btnLogin.onclick = function () {
   let acc = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
-
+  window.acc = acc;
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.executeScript(
       tabs[0].id,
