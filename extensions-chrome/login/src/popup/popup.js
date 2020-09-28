@@ -57,27 +57,18 @@ const onClick = (acc) => `
       submit.click();
     }, 0)
   } else {
-    logout = logout[0].parentElement.parentElement.click();
+    chrome.storage.sync.set({ 'account': {'username': '${acc.username}', 'password': '${acc.password}'} });
 
-    setTimeout(() => {
-      console.log('111111111');
-    }, 5000);
+    logout[0].parentElement.parentElement.click();
   }
 `;
 
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-  chrome.tabs.executeScript(
-    tabs[0].id,
-    { code: `console.log('123123')` });
-});
-
-
 btnLogin.onclick = function () {
-  let acc = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
-  window.acc = acc;
+  let account = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
+
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.executeScript(
       tabs[0].id,
-      { code: onClick(acc) });
+      { code: onClick(account) });
   });
 };

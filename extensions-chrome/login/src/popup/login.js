@@ -1,13 +1,29 @@
-console.log('init');
+chrome.storage.sync.get('account', function (data) {
+    const { account } = data;
 
-chrome.storage.sync.get('accounts', function (data) {
-    const { accounts } = data;
-    console.log(accounts);
-})
+    if (account.username) {
+        let indentify = null;
+        const inval = setInterval(() => {
+            indentify = document.getElementById('signin-identity');
+            if (indentify !== null) {
+                clearInterval(inval);
 
-chrome.extension.onMessage.addListener(
-    function (request, sender, sendResponse) {
-        // LOG THE CONTENTS HERE
-        console.log(request.content);
+                chrome.storage.sync.set({ account: {} });
+
+                const password = document.getElementById('password');
+
+                indentify.value = account.username;
+                password.value = account.password;
+
+                indentify.dispatchEvent(new Event('change'));
+                password.dispatchEvent(new Event('change'));
+
+                const submit = document.querySelector('#signin button[type="submit"]');
+
+                setTimeout(() => {
+                    submit.click();
+                }, 0)
+            }
+        }, 100);
     }
-);
+})
