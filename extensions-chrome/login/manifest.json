@@ -1,0 +1,36 @@
+{
+  "name": "Tool only for Ms My",
+  "version": "1.0",
+  "description": "Code tool login HAHALOLO for My love",
+  "manifest_version": 2,
+  "permissions": [
+    "activeTab",
+    "declarativeContent",
+    "storage"
+  ],
+  "options_page": "src/setting/setting.html",
+  "background": {
+    "scripts": [
+      "src/app.js"
+    ],
+    "persistent": false
+  },
+  "page_action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "images/get_started16.png",
+      "32": "images/get_started32.png",
+      "48": "images/get_started48.png",
+      "128": "images/get_started128.png"
+    }
+  },
+  "icons": {
+    "16": "images/get_started16.png",
+    "32": "images/get_started32.png",
+    "48": "images/get_started48.png",
+    "128": "images/get_started128.png"
+  },
+  "web_accessible_resources": [
+    "data/account.json"
+  ]
+}
