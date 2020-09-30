@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta charset="utf-8">
   <style>
     button {
       height: 30px;
@@ -9,15 +10,53 @@
       outline: none;
       margin: 10px;
     }
+
+    #accounts {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #accounts td,
+    #accounts th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    #accounts tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #accounts tr:hover {
+      background-color: #ddd;
+    }
+
+    #accounts th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #4CAF50;
+      color: white;
+    }
   </style>
 </head>
 
 <body>
-  <div id="buttonDiv">
-  </div>
   <div>
-    <p>Choose a different background color!</p>
+    <h3> Quản lý danh sách tài khoản </h3>
   </div>
+  <button id="btnSave" style="background-color: #4CAF50; font-size: 10px;">Lưu</button>
+  <table id="accounts">
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Họ tên</th>
+        <th>Username</th>
+      </tr>
+    </thead>
+    <tbody id="table-account-body">
+    </tbody>
+  </table>
 </body>
 <script src="setting.js"></script>
 

@@ -4,18 +4,36 @@
 
 'use strict';
 
-let page = document.getElementById('buttonDiv');
-const kButtonColors = ['#3aa757', '#e8453c', '#f9bb2d', '#4688f1'];
-function constructOptions(kButtonColors) {
-  for (let item of kButtonColors) {
-    let button = document.createElement('button');
-    button.style.backgroundColor = item;
-    button.addEventListener('click', function() {
-      chrome.storage.sync.set({color: item}, function() {
-        console.log('color is ' + item);
-      })
-    });
-    page.appendChild(button);
+const body = document.getElementById('table-account-body');
+const btnSave = document.getElementById('btnSave');
+
+chrome.storage.sync.get('accounts', function (data) {
+  const { accounts } = data;
+  const keys = Object.keys(accounts);
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const acc = accounts[key];
+
+    const tr = document.createElement('tr');
+
+    const tdStt = document.createElement('td');
+    tdStt.innerHTML = i + 1;
+
+    const tdName = document.createElement('td');
+    tdName.innerHTML = key;
+
+    const tdUsername = document.createElement('td');
+    tdUsername.innerHTML = acc.username;
+
+    tr.appendChild(tdStt);
+    tr.appendChild(tdName);
+    tr.appendChild(tdUsername);
+
+    body.appendChild(tr);
   }
-}
-constructOptions(kButtonColors);
+
+  btnSave.onclick = function () {
+    document.execCommand('SaveAs',null,filename)
+  };
+})

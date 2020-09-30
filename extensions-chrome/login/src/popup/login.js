@@ -8,7 +8,7 @@ chrome.storage.sync.get('account', function (data) {
             if (indentify !== null) {
                 clearInterval(inval);
 
-                chrome.storage.sync.set({ account: {} });
+                chrome.storage.sync.set({ account: {} }); // remove
 
                 const password = document.getElementById('password');
 
