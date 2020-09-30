@@ -1,44 +1,91 @@
 'use strict';
 
 let btnLogin = document.getElementById('btnLogin');
+let btnAcceptFriend = document.getElementById('btnAcceptFriend');
 let radioAccount = document.getElementById('radioAccount');
 let accounts = {};
 let keys = [];
-let indentify, password, submit, logout = null;
+let indentify, password, submit, logout, checked = null;
+
+chrome.storage.sync.get('checked', (dataChecked) => {
+  ({ checked } = dataChecked);
+});
 
 chrome.storage.sync.get('accounts', function (data) {
   ({ accounts } = data);
 
   keys = Object.keys(accounts);
 
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const acc = accounts[key];
-
+  const renderRadio = (acc, i, key) => {
     var input = document.createElement('input');
     input.setAttribute('type', 'radio');
     input.setAttribute('name', 'account');
+    input.classList.add('selectRadio');
     input.value = i;
-    if (i === 0) input.checked = true;
+    if (checked === acc.username) input.checked = true;
+    else if (i === 0) input.checked = true;
 
     var label = document.createElement('label');
-    label.innerHTML = '<span style="font-weight: bold;">' + key + '</span> <br/> <small style="font-style: italic;">' + acc.username + '</small>';
+    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small>';
 
     var div = document.createElement('div');
     div.setAttribute('style', 'display: flex;');
 
     div.appendChild(input);
     div.appendChild(label);
+    div.classList.add('selectRadio');
 
     div.addEventListener("click", (el) => {
-      el.target.parentElement.previousSibling.checked = true;
+      if (el.target.getAttribute('type') !== 'radio') {
+        el.target.parentElement.previousSibling.checked = true;
+      }
+      chrome.storage.sync.set({ 'checked': accounts[keys[document.querySelector('input[name="account"]:checked').value]].username });
     });
 
-    radioAccount.appendChild(div);
+    return div;
   }
+
+  if (keys.length >= 10) {
+    radioAccount.parentElement.style.width = '400px';
+
+    const colum1 = document.createElement('div');
+    const verticalLine = document.createElement('div');
+    const colum2 = document.createElement('div');
+
+    colum1.classList.add('column');
+    colum2.classList.add('column');
+    verticalLine.classList.add('vl');
+
+    radioAccount.appendChild(colum1);
+    radioAccount.appendChild(verticalLine);
+    radioAccount.appendChild(colum2);
+
+    const itemNumber = ~~(keys.length / 2);
+
+    for (let i = 0; i < itemNumber; i++) {
+      const key = keys[i];
+      const acc = accounts[key];
+
+      colum1.appendChild(renderRadio(acc, i, key));
+    }
+    for (let i = itemNumber; i < keys.length; i++) {
+      const key = keys[i];
+      const acc = accounts[key];
+
+      colum2.appendChild(renderRadio(acc, i, key));
+    }
+  } else {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const acc = accounts[key];
+
+      radioAccount.appendChild(renderRadio(acc, i, key));
+    }
+  }
+
 })
 
-const onClick = (acc) => `
+const onClickLogin = (acc) => `
   logout = document.getElementsByClassName('ic-logout-c');
   if (logout.length === 0) {
     
@@ -63,12 +110,36 @@ const onClick = (acc) => `
   }
 `;
 
+const onClickAcceptFriend = () => `
+  jQuery('#js-dropdown-notif-friend').find('.dropdown-menu').addClass('show');
+
+  var addFriend = setInterval(function(){
+    if (jQuery(jQuery('.notif-list')[0]).find('.btn-friend.confirm').length === 0) {
+        if (jQuery(jQuery('.notif-list')[0]).next().next().find('a').length === 0) {
+            clearInterval(addFriend);
+            alert('Đồng ý hết lời mời rồi nha bạn mình ơi !!');
+            window.location.href = window.location.href;
+        }
+        else jQuery(jQuery('.notif-list')[0]).next().next().find('a').click();
+    }
+    jQuery(jQuery('.notif-list')[0]).find('.btn-friend.confirm').each(function (a, b) { setTimeout(() => { jQuery(this).click() }, a * 2000) })
+  }, 1000);
+`;
+
 btnLogin.onclick = function () {
   let account = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.executeScript(
       tabs[0].id,
-      { code: onClick(account) });
+      { code: onClickLogin(account) });
+  });
+};
+
+btnAcceptFriend.onclick = function () {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.executeScript(
+      tabs[0].id,
+      { code: onClickAcceptFriend() });
   });
 };
