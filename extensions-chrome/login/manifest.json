@@ -43,6 +43,15 @@
       "js": [
         "src/popup/login.js"
       ]
+    },
+    {
+      "matches": [
+        "*://www.hahalolo.com"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "src/popup/jquery.js"
+      ]
     }
   ]
 }
