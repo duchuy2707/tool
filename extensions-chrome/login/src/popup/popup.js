@@ -10,19 +10,9 @@ let accounts = {};
 let keys = [];
 let indentify, password, submit, logout, checked = null;
 
-chrome.storage.sync.get('checked', (dataChecked) => {
-  ({ checked } = dataChecked);
-});
+chrome.storage.sync.get(['accounts', 'checked', 'keys'], function (data) {
+  ({ accounts, checked, keys } = data);
 
-chrome.storage.sync.get('keys', (dataKeys) => {
-  ({ keys } = dataKeys);
-});
-
-chrome.storage.sync.get('accounts', function (data) {
-  console.log(data);
-  ({ accounts } = data);
-
-  console.log(keys);
   const renderRadio = (acc, i, key) => {
     var input = document.createElement('input');
     input.setAttribute('type', 'radio');
