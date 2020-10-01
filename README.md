@@ -11,6 +11,9 @@ Tào lao tool
 - chon lai tai khoan da chon truoc do
 - tinh nang tu dong y loi moi ket ban
 
+### Version 1.2.2
+- Cong cu tu dong cap nhat version moi
+
 ### Version 1.3.1
 - Trang quan ly tai khoan
 - Import file excel, json
