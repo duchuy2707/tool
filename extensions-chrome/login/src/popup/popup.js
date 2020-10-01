@@ -2,7 +2,10 @@
 
 let btnLogin = document.getElementById('btnLogin');
 let btnAcceptFriend = document.getElementById('btnAcceptFriend');
+let btnReload = document.getElementById('btnReload');
 let radioAccount = document.getElementById('radioAccount');
+let btnShowPwd = document.getElementById('btnShowPwd');
+
 let accounts = {};
 let keys = [];
 let indentify, password, submit, logout, checked = null;
@@ -11,11 +14,15 @@ chrome.storage.sync.get('checked', (dataChecked) => {
   ({ checked } = dataChecked);
 });
 
+chrome.storage.sync.get('keys', (dataKeys) => {
+  ({ keys } = dataKeys);
+});
+
 chrome.storage.sync.get('accounts', function (data) {
+  console.log(data);
   ({ accounts } = data);
 
-  keys = Object.keys(accounts);
-
+  console.log(keys);
   const renderRadio = (acc, i, key) => {
     var input = document.createElement('input');
     input.setAttribute('type', 'radio');
@@ -26,7 +33,7 @@ chrome.storage.sync.get('accounts', function (data) {
     else if (i === 0) input.checked = true;
 
     var label = document.createElement('label');
-    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small>';
+    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small> <br/> <small class="selectRadio pwd hide" style="font-style: italic">' + acc.password + '</small>';
 
     var div = document.createElement('div');
     div.setAttribute('style', 'display: flex;');
@@ -111,18 +118,21 @@ const onClickLogin = (acc) => `
 `;
 
 const onClickAcceptFriend = () => `
-  jQuery('#js-dropdown-notif-friend').find('.dropdown-menu').addClass('show');
+  document.querySelector('#js-dropdown-notif-friend .dropdown-menu').classList.add('show');
 
   var addFriend = setInterval(function(){
-    if (jQuery(jQuery('.notif-list')[0]).find('.btn-friend.confirm').length === 0) {
-        if (jQuery(jQuery('.notif-list')[0]).next().next().find('a').length === 0) {
+    const notifList = document.querySelector('.notif-list');
+    const btnAcceptFriend = notifList.querySelectorAll('.btn-friend.confirm');
+    if (btnAcceptFriend.length === 0) {
+        const btnLoadMore = notifList.nextElementSibling.nextElementSibling.getElementsByTagName('a');
+        if (btnLoadMore.length === 0) {
             clearInterval(addFriend);
             alert('Đồng ý hết lời mời rồi nha bạn mình ơi !!');
             window.location.href = window.location.href;
         }
-        else jQuery(jQuery('.notif-list')[0]).next().next().find('a').click();
+        else btnLoadMore[0].click();
     }
-    jQuery(jQuery('.notif-list')[0]).find('.btn-friend.confirm').each(function (a, b) { setTimeout(() => { jQuery(this).click() }, a * 2000) })
+    btnAcceptFriend.forEach(function (a, b) { setTimeout(() => { a.click() }, b * 2000) })
   }, 1000);
 `;
 
@@ -142,4 +152,22 @@ btnAcceptFriend.onclick = function () {
       tabs[0].id,
       { code: onClickAcceptFriend() });
   });
+};
+
+btnReload.onclick = function () {
+  chrome.runtime.reload();
+};
+
+btnShowPwd.onclick = function () {
+  document.querySelectorAll('.pwd').forEach(function (item) {
+    if (item.classList.contains('show')) {
+      item.classList.add('hide');
+      item.classList.remove('show');
+      btnShowPwd.innerHTML = 'Show Pwd';
+    } else {
+      item.classList.add('show');
+      item.classList.remove('hide');
+      btnShowPwd.innerHTML = 'Hide Pwd';
+    }
+  })
 };
