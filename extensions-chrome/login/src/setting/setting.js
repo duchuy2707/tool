@@ -8,13 +8,8 @@ const body = document.getElementById('table-account-body');
 const btnSave = document.getElementById('btnSave');
 const btnReload = document.getElementById('btnReload');
 
-let keys = [];
-chrome.storage.sync.get('keys', (dataKeys) => {
-  ({ keys } = dataKeys);
-});
-
-chrome.storage.sync.get('accounts', function (data) {
-  const { accounts } = data;
+chrome.storage.sync.get(['accounts', 'keys'], function (data) {
+  const { accounts, keys } = data;
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i];

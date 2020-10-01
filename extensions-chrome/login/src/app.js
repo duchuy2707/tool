@@ -24,8 +24,7 @@ chrome.runtime.onInstalled.addListener(function () {
                 accounts[item] = data[item];
             })
 
-            chrome.storage.sync.set({ accounts });
-            chrome.storage.sync.set({ keys: iter.concat(str) });
+            chrome.storage.sync.set({ accounts, keys: iter.concat(str) });
         }
     };
     xhr.send();
