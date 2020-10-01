@@ -1,56 +1,57 @@
 {
-    "name": "Tool only for Ms My",
-    "version": "1.2.1",
-    "description": "Code tool login HAHALOLO for My love,  write this tool because I want my lover to work lighter and faster, moreover, because I love her. This tool is only work at HAHALOLO platform",
-    "manifest_version": 2,
-    "permissions": [
-        "activeTab",
-        "*://www.hahalolo.com/*",
-        "declarativeContent",
-        "storage"
+  "name": "Tool only for Ms My",
+  "version": "1.2.1",
+  "description": "Code tool login HAHALOLO for My love,  write this tool because I want my lover to work lighter and faster, moreover, because I love her. This tool is only work at HAHALOLO platform",
+  "manifest_version": 2,
+  "permissions": [
+    "activeTab",
+    "*://www.hahalolo.com/*",
+    "declarativeContent",
+    "storage"
+  ],
+  "options_page": "src/setting/setting.html",
+  "background": {
+    "scripts": [
+      "src/app.js"
     ],
-    "options_page": "src/setting/setting.html",
-    "background": {
-        "scripts": [
-            "src/app.js"
-        ],
-        "persistent": false
+    "persistent": false
+  },
+  "browser_action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "images/img_16.png",
+      "32": "images/img_32.png",
+      "48": "images/img_48.png",
+      "128": "images/img_128.png"
+    }
+  },
+  "icons": {
+    "16": "images/img_16.png",
+    "32": "images/img_32.png",
+    "48": "images/img_48.png",
+    "128": "images/img_128.png"
+  },
+  "web_accessible_resources": [
+    "data/account.json"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.hahalolo.com/auth/signin"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "src/popup/login.js"
+      ]
     },
-    "browser_action": {
-        "default_popup": "src/popup/popup.html",
-        "default_icon": {
-            "16": "images/img_16.png",
-            "32": "images/img_32.png",
-            "48": "images/img_48.png",
-            "128": "images/img_128.png"
-        }
-    },
-    "icons": {
-        "16": "images/img_16.png",
-        "32": "images/img_32.png",
-        "48": "images/img_48.png",
-        "128": "images/img_128.png"
-    },
-    "web_accessible_resources": [
-        "data/account.json"
-    ],
-    "content_scripts": [{
-            "matches": [
-                "*://www.hahalolo.com/auth/signin"
-            ],
-            "run_at": "document_end",
-            "js": [
-                "src/popup/login.js"
-            ]
-        },
-        {
-            "matches": [
-                "*://www.hahalolo.com/"
-            ],
-            "run_at": "document_end",
-            "js": [
-                "src/popup/jquery.js"
-            ]
-        }
-    ]
+    {
+      "matches": [
+        "*://www.hahalolo.com/*"
+      ],
+      "run_at": "document_end",
+      "js": [
+        "src/popup/jquery.js"
+      ]
+    }
+  ]
 }
