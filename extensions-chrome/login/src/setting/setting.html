@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    button {
+      height: 30px;
+      width: 130px;
+      outline: none;
+      background-color: #008CBA;
+      color: white;
+      border-radius: 8px;
+      border: 1px solid;
+      font-weight: bold;
+      font-style: italic;
+      margin-bottom: 5px;
+    }
+
+    button:hover {
+      background-color: #4CAF50;
+      cursor: pointer;
+    }
+
+    #accounts {
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    #accounts td,
+    #accounts th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    #accounts tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    #accounts tr:hover {
+      background-color: #ddd;
+    }
+
+    #accounts th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <h3> Quản lý danh sách tài khoản </h3>
+  </div>
+  <button id="btnSave">Lưu</button>
+  <button id="btnReload">Reload</button>
+  <table id="accounts">
+    <thead>
+      <tr>
+        <th>STT</th>
+        <th>Họ tên</th>
+        <th>Username</th>
+      </tr>
+    </thead>
+    <tbody id="table-account-body">
+    </tbody>
+  </table>
+</body>
+<script src="setting.js"></script>
+
+</html>

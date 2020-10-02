@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <style>
+        button {
+            height: 30px;
+            width: auto;
+            min-width: 60px;
+            outline: none;
+            background-color: #008CBA;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #4CAF50;
+            cursor: pointer;
+        }
+
+        .h-badge {
+            top: -8px;
+            left: 50%;
+            z-index: 1;
+            min-width: 18px;
+            padding: 2px 4px;
+            border-radius: 0.5rem;
+            font-size: 75%;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            color: white;
+            background: #ffb3b3;
+        }
+
+        #radioAccount {
+            overflow: auto;
+            width: auto;
+            height: 410px;
+        }
+
+        /* Create two equal columns that floats next to each other */
+        .column {
+            float: left;
+            padding: 10px;
+            /* Should be removed. Only for demonstration */
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .vl {
+            border-left: 1px solid grey;
+            height: 320px;
+            position: absolute;
+            left: 50%;
+            margin-left: -3px;
+            top: 100px;
+        }
+
+        .selectRadio:hover {
+            cursor: pointer;
+            background-color: #f1f1f1;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="border:1px solid #ddd">
+        <div style="color: #000!important; background-color: #f1f1f1!important; padding:5px">
+            <h3 style="text-align: center; font-weight: bold; font-style: italic;">Danh sách tài khoản</h3>
+        </div>
+        <div style="width: 200px; margin-top: 5px;">
+            <div id="radioAccount"></div>
+            <hr style="width: 150px">
+            <div style="text-align: center;">
+                <button id="btnLogin"
+                    style="border-radius: 8px; border: 1px solid; font-weight: bold; font-style: italic; margin-bottom: 5px;">Login</button>
+                <button id="btnAcceptFriend"
+                    style="border-radius: 8px; border: 1px solid; font-weight: bold; font-style: italic; margin-bottom: 5px">Accept
+                    Friend</button>
+                <button id="btnShowPwd"
+                    style="border-radius: 8px; border: 1px solid; font-weight: bold; font-style: italic; margin-bottom: 5px">Show
+                    Pwd</button>
+                <button id="btnReload"
+                    style="border-radius: 8px; border: 1px solid; font-weight: bold; font-style: italic; margin-bottom: 5px;">Reload</button>
+            </div>
+        </div>
+    </div>
+    <script src="popup.js"></script>
+    <script src="login.js"></script>
+</body>
+
+</html>
