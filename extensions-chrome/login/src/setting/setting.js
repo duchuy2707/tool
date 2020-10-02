@@ -1,3 +1,7 @@
+/**
+ * @author duchuy
+ */
+
 'use strict';
 
 const body = document.getElementById('table-account-body');
