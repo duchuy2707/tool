@@ -2,19 +2,16 @@
 
 let btnLogin = document.getElementById('btnLogin');
 let btnAcceptFriend = document.getElementById('btnAcceptFriend');
+let btnReload = document.getElementById('btnReload');
 let radioAccount = document.getElementById('radioAccount');
+let btnShowPwd = document.getElementById('btnShowPwd');
+
 let accounts = {};
 let keys = [];
 let indentify, password, submit, logout, checked = null;
 
-chrome.storage.sync.get('checked', (dataChecked) => {
-  ({ checked } = dataChecked);
-});
-
-chrome.storage.sync.get('accounts', function (data) {
-  ({ accounts } = data);
-
-  keys = Object.keys(accounts);
+chrome.storage.sync.get(['accounts', 'checked', 'keys'], function (data) {
+  ({ accounts, checked, keys } = data);
 
   const renderRadio = (acc, i, key) => {
     var input = document.createElement('input');
@@ -26,7 +23,7 @@ chrome.storage.sync.get('accounts', function (data) {
     else if (i === 0) input.checked = true;
 
     var label = document.createElement('label');
-    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small>';
+    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <span class="selectRadio h-badge ' + (acc.countLogin ? '' : 'hide') + '">' + acc.countLogin + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small> <br/> <small class="selectRadio pwd hide" style="font-style: italic">' + acc.password + '</small>';
 
     var div = document.createElement('div');
     div.setAttribute('style', 'display: flex;');
@@ -39,7 +36,12 @@ chrome.storage.sync.get('accounts', function (data) {
       if (el.target.getAttribute('type') !== 'radio') {
         el.target.parentElement.previousSibling.checked = true;
       }
-      chrome.storage.sync.set({ 'checked': accounts[keys[document.querySelector('input[name="account"]:checked').value]].username });
+      const acc = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
+      // if (acc.countLogin) acc.countLogin += 1;
+      // else acc.countLogin = 1;
+      // el.target.closest('div').querySelector('.h-badge').innerHTML = acc.countLogin;
+      // el.target.closest('div').querySelector('.h-badge').classList.remove('hide');
+      chrome.storage.sync.set({ 'checked': acc.username });
     });
 
     return div;
@@ -111,23 +113,35 @@ const onClickLogin = (acc) => `
 `;
 
 const onClickAcceptFriend = () => `
-  jQuery('#js-dropdown-notif-friend').find('.dropdown-menu').addClass('show');
+  document.querySelector('#js-dropdown-notif-friend .dropdown-menu').classList.add('show');
 
   var addFriend = setInterval(function(){
-    if (jQuery(jQuery('.notif-list')[0]).find('.btn-friend.confirm').length === 0) {
-        if (jQuery(jQuery('.notif-list')[0]).next().next().find('a').length === 0) {
+    const notifList = document.querySelector('.notif-list');
+    const btnAcceptFriend = notifList.querySelectorAll('.btn-friend.confirm');
+    if (btnAcceptFriend.length === 0) {
+        const btnLoadMore = notifList.nextElementSibling.nextElementSibling.getElementsByTagName('a');
+        if (btnLoadMore.length === 0) {
             clearInterval(addFriend);
             alert('Đồng ý hết lời mời rồi nha bạn mình ơi !!');
             window.location.href = window.location.href;
         }
-        else jQuery(jQuery('.notif-list')[0]).next().next().find('a').click();
+        else btnLoadMore[0].click();
     }
-    jQuery(jQuery('.notif-list')[0]).find('.btn-friend.confirm').each(function (a, b) { setTimeout(() => { jQuery(this).click() }, a * 2000) })
+    btnAcceptFriend.forEach(function (a, b) { setTimeout(() => { a.click() }, b * 2000) })
   }, 1000);
 `;
 
 btnLogin.onclick = function () {
+  const rdo = document.querySelector('input[name="account"]:checked');
   let account = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
+
+  if (account.countLogin) account.countLogin += 1;
+  else account.countLogin = 1;
+
+  rdo.closest('div').querySelector('.h-badge').innerHTML = account.countLogin;
+  rdo.closest('div').querySelector('.h-badge').classList.remove('hide');
+
+  chrome.storage.sync.set({ accounts });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.executeScript(
@@ -142,4 +156,22 @@ btnAcceptFriend.onclick = function () {
       tabs[0].id,
       { code: onClickAcceptFriend() });
   });
+};
+
+btnReload.onclick = function () {
+  chrome.runtime.reload();
+};
+
+btnShowPwd.onclick = function () {
+  document.querySelectorAll('.pwd').forEach(function (item) {
+    if (item.classList.contains('show')) {
+      item.classList.add('hide');
+      item.classList.remove('show');
+      btnShowPwd.innerHTML = 'Show Pwd';
+    } else {
+      item.classList.add('show');
+      item.classList.remove('hide');
+      btnShowPwd.innerHTML = 'Hide Pwd';
+    }
+  })
 };
