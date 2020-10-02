@@ -23,7 +23,7 @@ chrome.storage.sync.get(['accounts', 'checked', 'keys'], function (data) {
     else if (i === 0) input.checked = true;
 
     var label = document.createElement('label');
-    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <span class="selectRadio h-badge hide"></span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small> <br/> <small class="selectRadio pwd hide" style="font-style: italic">' + acc.password + '</small>';
+    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <span class="selectRadio h-badge ' + (acc.countLogin ? '' : 'hide') + '">' + acc.countLogin + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small> <br/> <small class="selectRadio pwd hide" style="font-style: italic">' + acc.password + '</small>';
 
     var div = document.createElement('div');
     div.setAttribute('style', 'display: flex;');
@@ -132,7 +132,16 @@ const onClickAcceptFriend = () => `
 `;
 
 btnLogin.onclick = function () {
+  const rdo = document.querySelector('input[name="account"]:checked');
   let account = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
+
+  if (account.countLogin) account.countLogin += 1;
+  else account.countLogin = 1;
+
+  rdo.closest('div').querySelector('.h-badge').innerHTML = account.countLogin;
+  rdo.closest('div').querySelector('.h-badge').classList.remove('hide');
+
+  chrome.storage.sync.set({ accounts });
 
   chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     chrome.tabs.executeScript(
