@@ -23,7 +23,7 @@ chrome.storage.sync.get(['accounts', 'checked', 'keys'], function (data) {
     else if (i === 0) input.checked = true;
 
     var label = document.createElement('label');
-    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small> <br/> <small class="selectRadio pwd hide" style="font-style: italic">' + acc.password + '</small>';
+    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <span class="selectRadio h-badge hide"></span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small> <br/> <small class="selectRadio pwd hide" style="font-style: italic">' + acc.password + '</small>';
 
     var div = document.createElement('div');
     div.setAttribute('style', 'display: flex;');
@@ -36,7 +36,12 @@ chrome.storage.sync.get(['accounts', 'checked', 'keys'], function (data) {
       if (el.target.getAttribute('type') !== 'radio') {
         el.target.parentElement.previousSibling.checked = true;
       }
-      chrome.storage.sync.set({ 'checked': accounts[keys[document.querySelector('input[name="account"]:checked').value]].username });
+      const acc = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
+      // if (acc.countLogin) acc.countLogin += 1;
+      // else acc.countLogin = 1;
+      // el.target.closest('div').querySelector('.h-badge').innerHTML = acc.countLogin;
+      // el.target.closest('div').querySelector('.h-badge').classList.remove('hide');
+      chrome.storage.sync.set({ 'checked': acc.username });
     });
 
     return div;
