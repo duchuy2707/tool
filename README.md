@@ -15,6 +15,10 @@ Tào lao tool
 - Cong cu tu dong cap nhat version moi
 - Sort danh sach tai khoan
 - Option show password
+- Count account login
+
+### Version 1.2.3
+- update count login by day
 
 ### Version 1.3.1
 - Trang quan ly tai khoan

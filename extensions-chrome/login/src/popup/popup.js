@@ -5,15 +5,27 @@ let btnAcceptFriend = document.getElementById('btnAcceptFriend');
 let btnReload = document.getElementById('btnReload');
 let radioAccount = document.getElementById('radioAccount');
 let btnShowPwd = document.getElementById('btnShowPwd');
+let spanToday = document.getElementById('today');
 
 let accounts = {};
 let keys = [];
-let indentify, password, submit, logout, checked = null;
+let isToday = false;
+let indentify, password, submit, logout, checked, oldDay = null;
 
-chrome.storage.sync.get(['accounts', 'checked', 'keys'], function (data) {
-  ({ accounts, checked, keys } = data);
+let today = new Date().toISOString().slice(0, 10);
+spanToday.innerHTML = today;
+
+chrome.storage.sync.get(['accounts', 'checked', 'keys', 'oldDay'], function (data) {
+  ({ accounts, checked, keys, oldDay } = data);
+
+  if (!oldDay && today !== oldDay) {
+    isToday = false;
+    chrome.storage.sync.set({ 'oldDay': today });
+  } else isToday = true;
 
   const renderRadio = (acc, i, key) => {
+    if (!isToday) acc.countLogin = 0;
+
     var input = document.createElement('input');
     input.setAttribute('type', 'radio');
     input.setAttribute('name', 'account');
