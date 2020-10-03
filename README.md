@@ -20,6 +20,9 @@ Tào lao tool
 ### Version 1.2.3
 - update count login by day
 
+### Version 1.2.4
+- action request friend
+
 ### Version 1.3.1
 - Trang quan ly tai khoan
 - Import file excel, json

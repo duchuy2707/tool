@@ -2,6 +2,7 @@
 
 let btnLogin = document.getElementById('btnLogin');
 let btnAcceptFriend = document.getElementById('btnAcceptFriend');
+let btnRequestFriend = document.getElementById('btnRequestFriend');
 let btnReload = document.getElementById('btnReload');
 let radioAccount = document.getElementById('radioAccount');
 let btnShowPwd = document.getElementById('btnShowPwd');
@@ -17,8 +18,8 @@ spanToday.innerHTML = today;
 
 chrome.storage.sync.get(['accounts', 'checked', 'keys', 'oldDay'], function (data) {
   ({ accounts, checked, keys, oldDay } = data);
-
-  if (!oldDay && today !== oldDay) {
+  
+  if (!oldDay || today !== oldDay) {
     isToday = false;
     chrome.storage.sync.set({ 'oldDay': today });
   } else isToday = true;
@@ -143,6 +144,28 @@ const onClickAcceptFriend = () => `
   }, 1000);
 `;
 
+/**
+ * find bài post
+ * tìm tới list danh sách người reaction
+ * click mở modal danh sách người reaction
+ * tìm những bạn bè nào có nút add friend để gởi lời mời
+ * ấn load more cho tới hết
+ * ẩn modal tìm tới bài post tiếp theo
+ * nếu không có ai reaction thì bỏ qua
+ * đợi danh sách bạn bè load ra bằng hàm interval
+ * tự scroll tới cuối để load thêm bài post
+ * chỉ dừng lại khi reload
+ */
+const onClickRequestFriend = () => `
+  const arrPost = document.querySelectorAll('.post');
+
+  arrPost.forEach((item) => {
+    const btnReaction = item.querySelector('.post-statistic__reaction');
+
+    // if (btnReaction.querySelector('data-bind="text: messLike"'))
+  });
+`;
+
 btnLogin.onclick = function () {
   const rdo = document.querySelector('input[name="account"]:checked');
   let account = accounts[keys[document.querySelector('input[name="account"]:checked').value]];
@@ -167,6 +190,14 @@ btnAcceptFriend.onclick = function () {
     chrome.tabs.executeScript(
       tabs[0].id,
       { code: onClickAcceptFriend() });
+  });
+};
+
+btnRequestFriend.onclick = function () {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.executeScript(
+      tabs[0].id,
+      { code: onClickRequestFriend() });
   });
 };
 
