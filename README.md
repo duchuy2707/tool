@@ -23,6 +23,10 @@ Tào lao tool
 ### Version 1.4.1
 - action request friend
 
+### Version 1.4.2
+- action request friend limit 50 post
+- when load more 50 post, auto reload page
+
 ### Version 1.3.1
 - Trang quan ly tai khoan
 - Import file excel, json
