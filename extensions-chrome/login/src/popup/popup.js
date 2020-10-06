@@ -3,7 +3,7 @@
 let btnLogin = document.getElementById('btnLogin');
 let btnAcceptFriend = document.getElementById('btnAcceptFriend');
 let btnRequestFriend = document.getElementById('btnRequestFriend');
-let btnReload = document.getElementById('btnReload');
+// let btnReload = document.getElementById('btnReload');
 let radioAccount = document.getElementById('radioAccount');
 let btnShowPwd = document.getElementById('btnShowPwd');
 let spanToday = document.getElementById('today');
@@ -11,14 +11,15 @@ let spanToday = document.getElementById('today');
 let accounts = {};
 let keys = [];
 let isToday = false;
-let indentify, password, submit, logout, checked, oldDay = null;
+let indentify, password, submit, logout, checked, oldDay, arrPost, timePost = null;
+let indexPost = 0;
 
 let today = new Date().toISOString().slice(0, 10);
 spanToday.innerHTML = today;
 
 chrome.storage.sync.get(['accounts', 'checked', 'keys', 'oldDay'], function (data) {
   ({ accounts, checked, keys, oldDay } = data);
-  
+
   if (!oldDay || today !== oldDay) {
     isToday = false;
     chrome.storage.sync.set({ 'oldDay': today });
@@ -157,13 +158,79 @@ const onClickAcceptFriend = () => `
  * chỉ dừng lại khi reload
  */
 const onClickRequestFriend = () => `
-  const arrPost = document.querySelectorAll('.post');
+  const getPost = (i = 0) => {
+    arrPost = document.querySelectorAll('.post');
 
-  arrPost.forEach((item) => {
-    const btnReaction = item.querySelector('.post-statistic__reaction');
+    indexPost = i;
 
-    // if (btnReaction.querySelector('data-bind="text: messLike"'))
-  });
+    timePost = setInterval(() => {
+      if (indexPost === arrPost.length) {
+        clearInterval(timePost);
+        window.scrollTo(0, document.body.scrollHeight);
+
+        setTimeout(() => {
+          let timeLoadingPost = setInterval(() => {
+            if (document.querySelectorAll('.act-post-loading').length === 0) {
+              clearInterval(timeLoadingPost);
+              getPost(indexPost);
+            }
+          }, 100);
+        }, 1000);
+
+      } else {
+        let modalReaction = document.getElementById('modal__reaction-count');
+        if (!modalReaction || !modalReaction.classList.contains('show')) {
+          const btnReaction = arrPost[indexPost].querySelector('.post-statistic__reaction');
+          indexPost++;
+          if ((btnReaction.querySelector('[data-bind="text: messLike"]').innerHTML || '').length > 0) {
+            btnReaction.click();
+
+            if (!modalReaction) modalReaction = document.getElementById('modal__reaction-count');
+
+            setTimeout(() => {
+              if (modalReaction.classList.contains('show')) {
+                let timeoutClickAddFriend = [];
+                const clickToAddFriend = () => {
+                  var loadingTime = setInterval(() => {
+                    if ((document.getElementById('data-loading-content-reaction').innerHTML || '').length === 0) {
+                      clearInterval(loadingTime);
+
+                      const arrUserReaction = modalReaction.querySelectorAll('.list-user__item');
+                      let index = 0;
+                      arrUserReaction.forEach(function (a) {
+                        const btnAddFr = a.querySelectorAll('.btn-friend.add');
+                        if (btnAddFr.length > 0) {
+                          timeoutClickAddFriend.push(setTimeout(() => {
+                            btnAddFr[0].click()
+                          }, index * 2000));
+                          index++;
+                        }
+                      });
+
+                      const btnLoadMore = modalReaction.querySelectorAll('[data-bind="click: onShowMore"]');
+                      if (btnLoadMore.length > 0) {
+                        btnLoadMore[0].click();
+                        clickToAddFriend();
+                      } else {
+                        setTimeout(() => {
+                          document.getElementById('modal__reaction-count').querySelector('[data-dismiss]').click();
+                        }, timeoutClickAddFriend.length === 0 ? 0 : timeoutClickAddFriend.reduce((a, b) => a + b) + 1000);
+                      }
+                    }
+
+                  }, 100);
+                }
+
+                clickToAddFriend();
+              }
+            }, 1000);
+          }
+        }
+      }
+    }, 1000);
+  }
+
+  getPost();
 `;
 
 btnLogin.onclick = function () {
@@ -201,9 +268,9 @@ btnRequestFriend.onclick = function () {
   });
 };
 
-btnReload.onclick = function () {
-  chrome.runtime.reload();
-};
+// btnReload.onclick = function () {
+//   chrome.runtime.reload();
+// };
 
 btnShowPwd.onclick = function () {
   document.querySelectorAll('.pwd').forEach(function (item) {
