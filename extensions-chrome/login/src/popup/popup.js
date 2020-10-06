@@ -137,7 +137,7 @@ const onClickAcceptFriend = () => `
         if (btnLoadMore.length === 0) {
             clearInterval(addFriend);
             alert('Đồng ý hết lời mời rồi nha bạn mình ơi !!');
-            window.location.href = window.location.href;
+            window.location.reload();
         }
         else btnLoadMore[0].click();
     }
@@ -172,7 +172,8 @@ const onClickRequestFriend = () => `
           let timeLoadingPost = setInterval(() => {
             if (document.querySelectorAll('.act-post-loading').length === 0) {
               clearInterval(timeLoadingPost);
-              getPost(indexPost);
+              if (indexPost > 50) window.location.reload();
+              else getPost(indexPost);
             }
           }, 100);
         }, 1000);
