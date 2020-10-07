@@ -241,7 +241,8 @@ const onClickRequestFriend = () => `
         const btnLoadMore = document.querySelectorAll('[data-bind="click: viewMoreFriends.bind($data, \\'mates\\') , text : t(\\'common.btn_load_more\\')"]');
         if (btnLoadMore.length === 0 || countClickAddFriend === 300) {
             clearInterval(addFriend);
-            alert('Đã gởi hết lời mời rồi nha bạn mình ơi');
+            if (countClickAddFriend === 300) alert('Đã gởi hết 300 lời mời rồi nha bạn mình ơi');
+            else alert('Đã gởi hết sạch lời mời rồi nha bạn mình ơi');
             window.location.reload();
         }
         else btnLoadMore[0].click();
