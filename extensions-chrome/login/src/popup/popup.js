@@ -12,7 +12,7 @@ let accounts = {};
 let keys = [];
 let isToday = false;
 let indentify, password, submit, logout, checked, oldDay, arrPost, timePost = null;
-let indexPost = 0;
+let indexPost, countLoadmoreFriend = 0;
 
 let today = new Date().toISOString().slice(0, 10);
 spanToday.innerHTML = today;
@@ -158,6 +158,7 @@ const onClickAcceptFriend = () => `
  * chỉ dừng lại khi reload
  */
 const onClickRequestFriend = () => `
+  countLoadmoreFriend = 0;
   const getPost = (i = 0) => {
     arrPost = document.querySelectorAll('.post');
 
@@ -231,7 +232,38 @@ const onClickRequestFriend = () => `
     }, 1000);
   }
 
-  getPost();
+  const getFriend = () => {
+    let timeoutClickAddFriend = [];
+    const arrBtnAddFriend = document.querySelectorAll('[data-bind="click: onActionButton.bind($data, \\'sendRequest\\', event)"]');
+
+    arrBtnAddFriend.forEach((btn, index) => {
+      timeoutClickAddFriend.push(setTimeout(() => {
+        btn.click();
+      }, index * 2000));
+    });
+
+    setTimeout(() => {
+      console.log(countLoadmoreFriend);
+      if (countLoadmoreFriend >= 50) {
+        window.location.reload();
+      } else {
+        const btnLoadMore = document.querySelectorAll('[data-bind="click: viewMoreFriends.bind($data, \\'mates\\') , text : t(\\'common.btn_load_more\\')"]');
+        if (btnLoadMore.length > 0) {
+          btnLoadMore[0].click();
+          countLoadmoreFriend++;
+          getFriend();
+        } else {
+          setTimeout(() => {
+            alert('Đã gởi hết lời mời rồi nha bạn mình ơi');
+            window.location.reload();
+          }, 1000);
+        }
+      }
+    }, timeoutClickAddFriend.length === 0 ? 0 : timeoutClickAddFriend.reduce((a, b) => a + b) + 1000);
+  };
+
+  if (window.location.href.indexOf('/u/') === -1) getPost();
+  else getFriend();
 `;
 
 btnLogin.onclick = function () {
