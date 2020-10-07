@@ -9,10 +9,10 @@ let btnShowPwd = document.getElementById('btnShowPwd');
 let spanToday = document.getElementById('today');
 
 let accounts = {};
-let keys = [];
+let keys, timeoutClickAddFriend = [];
 let isToday = false;
 let indentify, password, submit, logout, checked, oldDay, arrPost, timePost = null;
-let indexPost, countLoadmoreFriend = 0;
+let indexPost, countClickAddFriend = 0;
 
 let today = new Date().toISOString().slice(0, 10);
 spanToday.innerHTML = today;
@@ -158,7 +158,9 @@ const onClickAcceptFriend = () => `
  * chỉ dừng lại khi reload
  */
 const onClickRequestFriend = () => `
-  countLoadmoreFriend = 0;
+  countClickAddFriend = 0;
+  timeoutClickAddFriend = [];
+
   const getPost = (i = 0) => {
     arrPost = document.querySelectorAll('.post');
 
@@ -191,7 +193,7 @@ const onClickRequestFriend = () => `
 
             setTimeout(() => {
               if (modalReaction.classList.contains('show')) {
-                let timeoutClickAddFriend = [];
+                timeoutClickAddFriend = [];
                 const clickToAddFriend = () => {
                   var loadingTime = setInterval(() => {
                     if ((document.getElementById('data-loading-content-reaction').innerHTML || '').length === 0) {
@@ -233,33 +235,20 @@ const onClickRequestFriend = () => `
   }
 
   const getFriend = () => {
-    let timeoutClickAddFriend = [];
-    const arrBtnAddFriend = document.querySelectorAll('[data-bind="click: onActionButton.bind($data, \\'sendRequest\\', event)"]');
-
-    arrBtnAddFriend.forEach((btn, index) => {
-      timeoutClickAddFriend.push(setTimeout(() => {
-        btn.click();
-      }, index * 2000));
-    });
-
-    setTimeout(() => {
-      console.log(countLoadmoreFriend);
-      if (countLoadmoreFriend >= 50) {
-        window.location.reload();
-      } else {
+    var addFriend = setInterval(function(){
+      const arrBtnAddFriend = document.querySelectorAll('[data-bind="click: onActionButton.bind($data, \\'sendRequest\\', event)"]');
+      if (arrBtnAddFriend.length === 0) {
         const btnLoadMore = document.querySelectorAll('[data-bind="click: viewMoreFriends.bind($data, \\'mates\\') , text : t(\\'common.btn_load_more\\')"]');
-        if (btnLoadMore.length > 0) {
-          btnLoadMore[0].click();
-          countLoadmoreFriend++;
-          getFriend();
-        } else {
-          setTimeout(() => {
+        if (btnLoadMore.length === 0 || countClickAddFriend === 300) {
+            clearInterval(addFriend);
             alert('Đã gởi hết lời mời rồi nha bạn mình ơi');
             window.location.reload();
-          }, 1000);
         }
+        else btnLoadMore[0].click();
       }
-    }, timeoutClickAddFriend.length === 0 ? 0 : timeoutClickAddFriend.reduce((a, b) => a + b) + 1000);
+      countClickAddFriend += arrBtnAddFriend.length;
+      arrBtnAddFriend.forEach(function (a, b) { setTimeout(() => { a.click(); }, b * 2000) });
+    }, 1000);
   };
 
   if (window.location.href.indexOf('/u/') === -1) getPost();

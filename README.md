@@ -31,6 +31,9 @@ Tào lao tool
 - send request add friend in tab friend of user
 - update layout options
 
+### Version 1.5.2
+- limit click add friend in tab friend of user is 300
+
 ### Version 1.3.1
 - Trang quan ly tai khoan
 - Import file excel, json
