@@ -3,6 +3,7 @@
 let btnLogin = document.getElementById('btnLogin');
 let btnAcceptFriend = document.getElementById('btnAcceptFriend');
 let btnRequestFriend = document.getElementById('btnRequestFriend');
+let btnCancelRequestFriend = document.getElementById('btnCancelRequestFriend');
 // let btnReload = document.getElementById('btnReload');
 let radioAccount = document.getElementById('radioAccount');
 let btnShowPwd = document.getElementById('btnShowPwd');
@@ -12,7 +13,7 @@ let accounts = {};
 let keys, timeoutClickAddFriend = [];
 let isToday = false;
 let indentify, password, submit, logout, checked, oldDay, arrPost, timePost = null;
-let indexPost, countClickAddFriend = 0;
+let indexPost, countClickAddFriend, countClickCancelRequest = 0;
 
 let today = new Date().toISOString().slice(0, 10);
 spanToday.innerHTML = today;
@@ -37,7 +38,7 @@ chrome.storage.sync.get(['accounts', 'checked', 'keys', 'oldDay'], function (dat
     else if (i === 0) input.checked = true;
 
     var label = document.createElement('label');
-    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <span class="selectRadio h-badge ' + (acc.countLogin ? '' : 'hide') + '">' + acc.countLogin + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small> <br/> <small class="selectRadio pwd hide" style="font-style: italic">' + acc.password + '</small>';
+    label.innerHTML = '<span class="selectRadio" style="font-weight: bold;">' + key + '</span> <span class="selectRadio h-badge ' + (acc.countLogin ? '' : 'hide') + '">' + acc.countLogin + '</span> <br/> <small class="selectRadio" style="font-style: italic;">' + acc.username + '</small> <br/> <small class="selectRadio pwd hide" style="font-style: italic; color: red;">' + acc.password + '</small>';
 
     var div = document.createElement('div');
     div.setAttribute('style', 'display: flex;');
@@ -99,7 +100,12 @@ chrome.storage.sync.get(['accounts', 'checked', 'keys', 'oldDay'], function (dat
     }
   }
 
-})
+  const $vl = document.getElementsByClassName('vl');
+  if ($vl.length > 0) {
+    const $column1 = document.getElementsByClassName('column')[0];
+    $vl[0].style.left = $column1.offsetWidth + 15 + 'px';
+  }
+});
 
 const onClickLogin = (acc) => `
   logout = document.getElementsByClassName('ic-logout-c');
@@ -136,7 +142,7 @@ const onClickAcceptFriend = () => `
         const btnLoadMore = notifList.nextElementSibling.nextElementSibling.getElementsByTagName('a');
         if (btnLoadMore.length === 0) {
             clearInterval(addFriend);
-            alert('Đồng ý hết lời mời rồi nha bạn mình ơi !!');
+            alert('Đồng ý hết lời mời rồi nha bạn mình ơi <3');
             window.location.reload();
         }
         else btnLoadMore[0].click();
@@ -175,8 +181,10 @@ const onClickRequestFriend = () => `
           let timeLoadingPost = setInterval(() => {
             if (document.querySelectorAll('.act-post-loading').length === 0) {
               clearInterval(timeLoadingPost);
-              if (indexPost > 50) window.location.reload();
-              else getPost(indexPost);
+              if (indexPost > 50) {
+                alert('Đã gởi hết lời mời của 50 post rồi nha bạn mình ơiiii <3');
+                window.location.reload();
+              } else getPost(indexPost);
             }
           }, 100);
         }, 1000);
@@ -237,23 +245,50 @@ const onClickRequestFriend = () => `
   const getFriend = () => {
     var addFriend = setInterval(function(){
       const arrBtnAddFriend = document.querySelectorAll('[data-bind="click: onActionButton.bind($data, \\'sendRequest\\', event)"]');
-      if (arrBtnAddFriend.length === 0) {
+      if (arrBtnAddFriend.length === 0 || countClickAddFriend === 300) {
         const btnLoadMore = document.querySelectorAll('[data-bind="click: viewMoreFriends.bind($data, \\'mates\\') , text : t(\\'common.btn_load_more\\')"]');
         if (btnLoadMore.length === 0 || countClickAddFriend === 300) {
             clearInterval(addFriend);
-            if (countClickAddFriend === 300) alert('Đã gởi hết 300 lời mời rồi nha bạn mình ơi');
-            else alert('Đã gởi hết sạch lời mời rồi nha bạn mình ơi');
+            if (countClickAddFriend === 300) alert('Đã gởi hết 300 lời mời rồi nha bạn mình ơi <3');
+            else alert('Đã gởi hết sạch lời mời rồi nha bạn mình ơi <3');
             window.location.reload();
         }
-        else btnLoadMore[0].click();
+        else {
+          btnLoadMore[0].click();
+          countClickAddFriend += 10;
+        }
       }
-      countClickAddFriend += arrBtnAddFriend.length;
       arrBtnAddFriend.forEach(function (a, b) { setTimeout(() => { a.click(); }, b * 2000) });
     }, 1000);
   };
 
   if (window.location.href.indexOf('/u/') === -1) getPost();
   else getFriend();
+`;
+
+const onCLickCancelRequestFriend = () => `
+  countClickCancelRequest = 0;
+  const getRequest = () => {
+    var addFriend = setInterval(function(){
+      const arrBtnAddFriend = document.querySelectorAll("div[data-bind^='click: onActionButton']");
+      if (arrBtnAddFriend.length === 0 || countClickCancelRequest === 500) {
+        const btnLoadMore = document.querySelectorAll('[data-bind="click: viewMoreFriends.bind($data,\\'mreqs_sent\\'), text : t(\\'common.btn_load_more\\')"]');
+        if (btnLoadMore.length === 0 || countClickCancelRequest === 500) {
+            clearInterval(addFriend);
+            if (countClickCancelRequest === 500) alert('Đã hủy hết 500 lời mời rồi nha bạn mình ơi <3');
+            else alert('Đã hủy hết sạch lời mời rồi nha bạn mình ơi <3');
+            window.location.reload();
+        }
+        else {
+          btnLoadMore[0].click();
+          countClickCancelRequest += 10;
+        }
+      }
+      arrBtnAddFriend.forEach(function (a, b) { setTimeout(() => { a.click(); }, b * 2000) });
+    }, 1000);
+  };
+
+  getRequest();
 `;
 
 btnLogin.onclick = function () {
@@ -290,6 +325,14 @@ btnRequestFriend.onclick = function () {
       { code: onClickRequestFriend() });
   });
 };
+
+btnCancelRequestFriend.onclick = function () {
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.executeScript(
+      tabs[0].id,
+      { code: onCLickCancelRequestFriend() });
+  });
+}
 
 // btnReload.onclick = function () {
 //   chrome.runtime.reload();
