@@ -104,6 +104,8 @@ chrome.storage.sync.get(['accounts', 'checked', 'keys', 'oldDay'], function (dat
   if ($vl.length > 0) {
     const $column1 = document.getElementsByClassName('column')[0];
     $vl[0].style.left = $column1.offsetWidth + 15 + 'px';
+
+    if ($column1.offsetWidth + 15 > 200) radioAccount.parentElement.style.width = `${($column1.offsetWidth + 15) * 2}px`
   }
 });
 

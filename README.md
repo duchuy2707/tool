@@ -34,17 +34,17 @@ Tào lao tool
 ### Version 1.5.2
 - limit click add friend in tab friend of user is 300
 
-### Version 1.3.1
-- Trang quan ly tai khoan
-- Import file excel, json
-- Export file json
-- CRUD account
-
-### Version 1.4.1
+### Version 1.6.1
 - Update action cancel request frient in personalwall
 - Fix mess info don't send request friend
 - Fix count request send
 - Fix bug position vl in between column
+
+### Version 1.7.1
+- Trang quan ly tai khoan
+- Import file excel, json
+- Export file json
+- CRUD account
 
 ### Version xxx
 - sau này có cần update thêm tài khoản nào đã vào rồi trong ngày, tài khoản nào chưa vào, tài khoản nào vào bao nhiu lần, tài khoản nào ưu tiên được đưa lên top, tài khoản nào độ ưu tiêp thấp ở dưới danh sách, chia ra loại tại khoản cá nhân tài khoản page tài khảon site này nọ hông
