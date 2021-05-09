@@ -1,0 +1,12 @@
+C:\Users\user\Desktop\Mytool\Mytool\bin\Debug\Mytool.exe.config
+C:\Users\user\Desktop\Mytool\Mytool\bin\Debug\Mytool.exe
+C:\Users\user\Desktop\Mytool\Mytool\bin\Debug\Mytool.pdb
+C:\Users\user\Desktop\Mytool\Mytool\obj\Debug\Mytool.csprojAssemblyReference.cache
+C:\Users\user\Desktop\Mytool\Mytool\obj\Debug\Mytool.Form1.resources
+C:\Users\user\Desktop\Mytool\Mytool\obj\Debug\Mytool.Properties.Resources.resources
+C:\Users\user\Desktop\Mytool\Mytool\obj\Debug\Mytool.csproj.GenerateResource.cache
+C:\Users\user\Desktop\Mytool\Mytool\obj\Debug\Mytool.csproj.CoreCompileInputs.cache
+C:\Users\user\Desktop\Mytool\Mytool\obj\Debug\Mytool.exe
+C:\Users\user\Desktop\Mytool\Mytool\obj\Debug\Mytool.pdb
+C:\Users\user\Desktop\Mytool\Mytool\bin\Debug\DarkUI.pdb
+C:\Users\user\Desktop\Mytool\Mytool\obj\Debug\Mytool.csproj.CopyComplete

@@ -1,5 +1,5 @@
 chrome.storage.sync.get('account', function (data) {
-    const { account } = data;
+    const { account = {} } = data;
 
     if (account.username) {
         let indentify = null;

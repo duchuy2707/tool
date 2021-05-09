@@ -49,6 +49,44 @@
       background-color: #4CAF50;
       color: white;
     }
+
+    .hide {
+      display: none;
+    }
+
+    .show {
+      display: block;
+    }
+
+    .blockUnit {
+      color: #000 !important;
+      background-color: #f1f1f1 !important;
+      box-shadow: 0 4px 10px 0 rgba(0, 0, 0, 0.2), 0 4px 20px 0 rgba(0, 0, 0, 0.19);
+      padding: 0.01em 16px;
+    }
+
+    input {
+      padding: 15px;
+      display: block;
+      border: none;
+      border-bottom: 1px solid #ccc;
+      background-color: #f1f1f1;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      -webkit-transition: 0.5s;
+      transition: 0.5s;
+      outline: none;
+    }
+
+    input:focus {
+      border: none;
+      border-bottom: 1px solid black
+    }
+
+    .isValid {
+      border-bottom: 1px solid red;
+    }
   </style>
 </head>
 
@@ -56,14 +94,30 @@
   <div>
     <h3> Quản lý danh sách tài khoản </h3>
   </div>
-  <button id="btnSave">Lưu</button>
-  <button id="btnReload">Reload</button>
+  <div style="width: 100%;">
+    <div style="margin-bottom: 15px;">
+      <form id="account" class="blockUnit">
+        <input type="text" name="fullname" placeholder="Fullname" />
+        <input type="text" name="username" placeholder="Username" />
+        <input type="password" name="password" placeholder="Password" />
+      </form>
+    </div>
+    <div style="padding-top: 10px; margin-bottom: 15px; padding-bottom: 5px; text-align: center;" class="blockUnit">
+      <button id="btnSave">Save</button>
+      <button id="btnShowPwd">Show Pwd</button>
+      <button id="btnImport">Import</button>
+      <button id="btnExportExcel">Export Excel</button>
+      <button id="btnExportJson">Export Json</button>
+      <button id="btnReload">Reload</button>
+    </div>
+  </div>
   <table id="accounts">
     <thead>
       <tr>
         <th>STT</th>
-        <th>Họ tên</th>
+        <th>Fullname</th>
         <th>Username</th>
+        <th class="pwd hide">Passsword</th>
       </tr>
     </thead>
     <tbody id="table-account-body">
