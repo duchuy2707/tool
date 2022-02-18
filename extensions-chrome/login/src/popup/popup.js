@@ -309,6 +309,12 @@ btnLogin.onclick = function () {
     chrome.tabs.executeScript(
       tabs[0].id,
       { code: onClickLogin(account) });
+    
+    chrome.tabs.onUpdated.addListener(function (tabId) {
+      chrome.tabs.executeScript(
+        tabId,
+        { code: 'console.log(123123)' });
+    });
   });
 };
 
